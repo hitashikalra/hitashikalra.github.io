@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hitashi Kalra</title>
+<meta name="description" content="Hitashi Kalra, data engineer and Drexel CS student. Pick a path: hike the mountain to get to know me, or walk across Philly to see my work.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%231D2B53'/%3E%3Crect x='1' y='1' width='2' height='6' fill='%23FFA300'/%3E%3Crect x='5' y='1' width='2' height='6' fill='%23FFA300'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23FFA300'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1D2B53; --plum:#7E2553; --green:#008751; --brown:#AB5236; --slate:#5F574F;
+  --silver:#C2C3C7; --cream:#FFF1E8; --red:#FF004D; --orange:#FFA300; --yellow:#FFEC27;
+  --lime:#00E436; --blue:#29ADFF; --lav:#83769C; --pink:#FF77A8; --peach:#FFCCAA;
+  --pix:"Pixelify Sans",ui-monospace,monospace;
+  --read:"Atkinson Hyperlegible",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--navy);color:var(--cream);font-family:var(--read);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.hidden{display:none!important}
+
+/* pixel-style boxes */
+.box{background:var(--navy);border:4px solid var(--cream);box-shadow:0 0 0 4px var(--navy),6px 6px 0 4px rgba(0,0,0,.45)}
+.pbtn{font-family:var(--pix);font-weight:600;font-size:15px;background:var(--orange);color:var(--navy);border:0;padding:9px 14px;box-shadow:inset -3px -3px 0 rgba(0,0,0,.25),inset 3px 3px 0 rgba(255,255,255,.35)}
+.pbtn:hover{background:var(--yellow)}
+.pbtn:active{box-shadow:inset 3px 3px 0 rgba(0,0,0,.25)}
+.pbtn.ghost{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 2px var(--cream)}
+.pbtn.ghost:hover{background:rgba(255,241,232,.12)}
+
+/* ---------------- title screen ---------------- */
+.title{position:fixed;inset:0;z-index:30;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 18px;
+  background:var(--navy) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' shape-rendering='crispEdges'%3E%3Crect x='14' y='22' width='3' height='3' fill='%23FFF1E8' opacity='.6'/%3E%3Crect x='80' y='9' width='3' height='3' fill='%23FFF1E8' opacity='.35'/%3E%3Crect x='52' y='70' width='3' height='3' fill='%23FFF1E8' opacity='.5'/%3E%3Crect x='101' y='95' width='3' height='3' fill='%23FFEC27' opacity='.5'/%3E%3Crect x='30' y='104' width='3' height='3' fill='%23FFF1E8' opacity='.3'/%3E%3C/svg%3E")}
+.title h1{font-family:var(--pix);font-weight:700;font-size:clamp(42px,9vw,96px);line-height:.95;text-align:center;color:var(--cream);text-shadow:5px 5px 0 var(--plum)}
+.title .sub{margin-top:14px;font-size:18px;color:var(--silver);text-align:center}
+.title .ask{margin-top:42px;font-family:var(--pix);font-size:22px;color:var(--yellow);text-align:center}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,330px));gap:26px;margin-top:20px}
+.choice{text-align:left;border:0;background:none;padding:0;display:flex}
+.choice .card{width:100%}
+.choice .card{display:block;padding:0;overflow:hidden;transition:transform .12s}
+.choice:hover .card,.choice:focus-visible .card{transform:translate(-3px,-3px)}
+.choice svg{display:block;width:100%;height:auto;border-bottom:4px solid var(--cream)}
+.choice .txt{display:block;padding:14px 16px 16px}
+.choice .key{display:inline-block;font-family:var(--pix);font-size:13px;background:var(--cream);color:var(--navy);padding:1px 7px;margin-right:8px}
+.choice b{font-family:var(--pix);font-size:22px;font-weight:700}
+.choice small{display:block;margin-top:6px;color:var(--silver);font-size:15px}
+.title .plain{margin-top:36px;font-size:15px;color:var(--silver)}
+.title .plain a{color:var(--cream)}
+
+/* ---------------- game ---------------- */
+.game{position:fixed;inset:0;display:grid;grid-template-columns:minmax(0,1fr) 440px}
+.stage{position:relative;overflow:hidden;touch-action:none;user-select:none}
+.stage.mountain{background:linear-gradient(var(--blue) 0 55%,#6CC8FF 55% 75%,#A6DEFF 75%)}
+.stage.city{background:linear-gradient(var(--navy) 0 35%,var(--plum) 35% 62%,#C24A6C 62% 80%,var(--pink) 80%)}
+.parallax,.world{position:absolute;left:0;top:0;will-change:transform}
+.parallax svg,.world svg{display:block;shape-rendering:crispEdges}
+.sign{position:absolute;transform:translateX(-50%);font-family:var(--pix);font-weight:600;font-size:15px;line-height:1.1;color:var(--cream);background:var(--brown);
+  padding:6px 10px;white-space:nowrap;box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 0 0 3px #5a2a17;text-align:center}
+.sign.post::after{content:"";position:absolute;left:50%;top:100%;margin-left:-4px;width:8px;height:112px;z-index:-1;background:#5a2a17}
+.sign.city{background:var(--navy);box-shadow:0 0 0 3px var(--yellow)}
+.sign.found{background:var(--green)}
+.sign.city.found{background:var(--green);box-shadow:0 0 0 3px var(--lime)}
+.sign.here{animation:bob .6s steps(2) infinite}
+@keyframes bob{50%{transform:translate(-50%,-4px)}}
+.player{position:absolute;width:48px;height:64px;z-index:5}
+.player svg{position:absolute;inset:0;display:block}
+.player .fB{display:none}
+.player.step .fA{display:none}.player.step .fB{display:block}
+.player.left svg{transform:scaleX(-1)}
+.hud{position:absolute;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;z-index:10;pointer-events:none}
+.hud>*{pointer-events:auto}
+.lvl{font-family:var(--pix);background:rgba(29,43,83,.85);padding:6px 10px;font-size:15px;line-height:1.2}
+.lvl b{display:block;font-size:19px;color:var(--yellow)}
+.hud .btns{display:flex;gap:8px}
+.hud .pbtn{font-size:13px;padding:7px 10px}
+.pad{position:absolute;left:12px;bottom:12px;display:flex;gap:8px;z-index:10}
+.pad button{width:54px;height:54px;font-family:var(--pix);font-size:22px;background:rgba(29,43,83,.82);border:3px solid var(--cream);color:var(--cream)}
+.pad button:active{background:var(--orange);color:var(--navy)}
+.hint{position:absolute;right:12px;bottom:14px;z-index:10;font-family:var(--pix);font-size:14px;background:rgba(29,43,83,.82);padding:5px 9px;line-height:1.3}
+
+/* story layer */
+.stage.mountain{background:var(--blue)}
+.sky{position:absolute;inset:0;opacity:0;transition:opacity 2.2s ease}
+.stage.mountain .sky.on{opacity:1}
+.sky.s0{background:linear-gradient(#5b3f8c 0 30%,#d9708f 30% 60%,#FFCCAA 60%)}
+.sky.s1{background:linear-gradient(var(--blue) 0 55%,#6CC8FF 55% 75%,#A6DEFF 75%)}
+.sky.s2{background:linear-gradient(#2f7fd1 0 35%,#FFA300 35% 65%,#FFEC27 65%)}
+.sky.s3{background:linear-gradient(#1D2B53 0 30%,#7E2553 30% 60%,#FF77A8 60%)}
+.reveal{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;transition:opacity 2.4s ease;background:#000 center/cover no-repeat;display:flex;align-items:flex-end}
+.reveal.on{opacity:1}
+.reveal::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.75))}
+.reveal p{position:relative;padding:0 28px 90px;font-family:var(--pix);font-size:clamp(20px,3vw,34px);line-height:1.25;text-shadow:2px 2px 0 #000;max-width:24ch}
+.reveal span{display:block;opacity:0;transform:translateY(10px);transition:all 1.2s ease}
+.reveal.on span:nth-child(1){opacity:1;transform:none;transition-delay:1.8s}
+.reveal.on span:nth-child(2){opacity:1;transform:none;transition-delay:3.6s;color:var(--yellow)}
+.bubble{position:absolute;z-index:6;transform:translate(-50%,-100%);background:var(--cream);color:var(--navy);font-family:var(--pix);font-size:15px;line-height:1.3;padding:8px 11px;max-width:260px;width:max-content;box-shadow:0 0 0 3px var(--navy);opacity:0;transition:opacity .2s}
+.bubble.on{opacity:1}
+.bubble::after{content:"";position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--cream)}
+.pop{position:absolute;z-index:8;transform:translateX(-50%);font-family:var(--pix);font-weight:700;font-size:26px;color:var(--yellow);text-shadow:3px 3px 0 var(--navy);white-space:nowrap;pointer-events:none;animation:pop 1.8s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}30%{transform:translate(-50%,-10px) scale(1)}100%{opacity:0;transform:translate(-50%,-90px)}}
+.chapter{position:absolute;inset:0;z-index:12;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;opacity:0;transition:opacity .8s}
+.chapter.on{opacity:1}
+.chapter small{font-family:var(--pix);font-size:18px;color:var(--orange)}
+.chapter b{font-family:var(--pix);font-size:clamp(40px,7vw,72px)}
+.score{display:flex;gap:12px;margin-top:6px;font-family:var(--pix);font-size:14px;background:rgba(29,43,83,.85);padding:5px 10px}
+.score b{color:var(--yellow)}
+.score.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.12)}}
+.complete{position:absolute;inset:0;z-index:13;background:rgba(10,14,30,.8);display:flex;align-items:center;justify-content:center;padding:18px}
+.cbox{max-width:560px;width:100%;padding:24px;text-align:center}
+.cbox .tag{font-family:var(--pix);color:var(--orange)}
+.cbox h2{font-family:var(--pix);font-size:32px;margin:4px 0 16px}
+.totals{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.totals b{display:block;font-family:var(--pix);font-size:clamp(28px,4vw,40px);color:var(--yellow);line-height:1}
+.totals span{font-size:14px;color:var(--silver)}
+.cnote{font-style:italic;margin-bottom:14px}
+.hook{margin-top:30px;max-width:560px;text-align:center;font-size:20px;min-height:3.2em;color:var(--cream)}
+.hook::after{content:"▌";color:var(--orange);animation:caret 1s steps(2) infinite}
+@keyframes caret{50%{opacity:0}}
+.title .ask{margin-top:18px}
+
+/* dialog panel */
+.panel{display:flex;flex-direction:column;min-height:0;background:var(--navy);border-left:6px solid var(--cream)}
+.ptop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:4px solid var(--cream);background:#16224A}
+.ptop .count{font-family:var(--pix);font-size:15px;color:var(--silver)}
+.ptop .count b{color:var(--yellow)}
+.pbody{flex:1;overflow:auto;padding:22px 22px 30px;scrollbar-width:thin}
+.pbody .tag{font-family:var(--pix);font-size:14px;color:var(--orange)}
+.pbody h2{font-family:var(--pix);font-weight:700;font-size:28px;line-height:1.1;margin:4px 0 4px}
+.pbody .meta{color:var(--silver);font-size:15px;margin-bottom:14px}
+.pbody .meta b{color:var(--cream);font-weight:700}
+.pbody p{margin-bottom:12px}
+.pbody ul{padding-left:20px;margin-bottom:14px}
+.pbody li{margin-bottom:9px}
+.pbody li::marker{content:"▸ ";color:var(--orange)}
+.pbody .stack{font-size:14px;color:var(--blue);margin:-4px 0 18px}
+.pbody hr{border:0;border-top:3px dashed var(--lav);margin:22px 0}
+.pbody .typed{min-height:1em}
+.inv{display:grid;gap:16px}
+.inv h3{font-family:var(--pix);font-size:16px;color:var(--yellow);margin-bottom:6px;font-weight:600}
+.inv .slots{display:flex;flex-wrap:wrap;gap:6px}
+.inv .slots span{font-size:14px;padding:4px 8px;background:#2A3A6B;box-shadow:inset 0 0 0 2px var(--lav)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 18px}
+.links a{text-decoration:none}
+.controls{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;margin:10px 0 18px}
+.controls kbd{font-family:var(--pix);background:var(--cream);color:var(--navy);padding:0 6px;font-size:14px;justify-self:start}
+
+/* art gallery */
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:6px}
+.gallery:empty{display:none}
+.gallery figure{margin:0}
+.gallery .art{display:block;width:100%;padding:0;border:0;background:#2A3A6B;box-shadow:0 0 0 3px var(--cream),4px 4px 0 3px rgba(0,0,0,.4);aspect-ratio:1;overflow:hidden}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.gallery .art:hover img{transform:scale(1.05)}
+.gallery figcaption{font-size:14px;color:var(--silver);margin-top:8px}
+.gallery figcaption a{color:var(--silver);font-size:12px}
+.lightbox{position:fixed;inset:0;z-index:60;background:rgba(10,14,30,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px}
+.lightbox img{max-width:min(92vw,900px);max-height:76vh;box-shadow:0 0 0 4px var(--cream);background:#fff}
+.lightbox p{color:var(--cream);font-family:var(--pix)}
+#lbClose{position:absolute;top:16px;right:16px}
+
+/* ---------------- plain resume ---------------- */
+.resume{position:fixed;inset:0;z-index:40;overflow:auto;background:#FBF7F2;color:#1D2B53}
+.resume .inner{max-width:780px;margin:0 auto;padding:40px 22px 80px}
+.resume .rtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.resume h1{font-family:var(--pix);font-size:40px;line-height:1}
+.resume .contact{font-size:15px;margin-top:8px}
+.resume h2{font-family:var(--pix);font-size:22px;border-bottom:3px solid #1D2B53;margin:30px 0 12px;padding-bottom:2px}
+.resume h3{font-size:17px;margin-top:14px}
+.resume .rmeta{font-size:15px;color:#4a4f66}
+.resume ul{padding-left:20px;margin-top:6px}
+.resume li{margin-bottom:5px;font-size:16px}
+.resume .pbtn.ghost{color:#1D2B53;box-shadow:inset 0 0 0 2px #1D2B53}
+@media print{.resume .rtop .btns{display:none}.resume{position:static;overflow:visible}body{overflow:visible}}
+
+@media (max-width:860px){
+  .choices{grid-template-columns:minmax(0,360px)}
+  .game{grid-template-columns:1fr;grid-template-rows:52svh minmax(0,1fr)}
+  .panel{border-left:0;border-top:6px solid var(--cream)}
+  .pbody{padding:16px 16px 26px}
+  .pbody h2{font-size:24px}
+  .hint{display:none}
+  .lvl{font-size:13px}.lvl b{font-size:16px}
+}
+@media (prefers-reduced-motion: reduce){.pop{animation:none;opacity:0}.reveal span{transition:none}.sign.here{animation:none}.choice .card{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- TITLE -->
+<section class="title" id="title" aria-label="Choose a path">
+  <h1>HITASHI<br>KALRA</h1>
+  <p class="sub">Data engineer. Computer Science at Drexel, class of 2027.</p>
+  <p class="hook" id="hook" aria-label="A girl from a small village in the Himalayas fell in love with data. This is her story."></p>
+  <p class="ask">Choose your path</p>
+  <div class="choices">
+    <button class="choice" data-go="mountain">
+      <span class="card box">
+        <svg viewBox="0 0 160 80" shape-rendering="crispEdges" aria-hidden="true">
+          <rect width="160" height="80" fill="#29ADFF"/><rect x="18" y="10" width="20" height="6" fill="#FFF1E8"/><rect x="14" y="14" width="30" height="4" fill="#FFF1E8"/>
+          <rect x="0" y="64" width="40" height="16" fill="#AB5236"/><rect x="40" y="56" width="32" height="24" fill="#AB5236"/><rect x="72" y="46" width="32" height="34" fill="#AB5236"/><rect x="104" y="36" width="32" height="44" fill="#AB5236"/><rect x="136" y="26" width="24" height="54" fill="#AB5236"/>
+          <rect x="0" y="62" width="40" height="3" fill="#00E436"/><rect x="40" y="54" width="32" height="3" fill="#00E436"/><rect x="72" y="44" width="32" height="3" fill="#00E436"/><rect x="104" y="34" width="32" height="3" fill="#00E436"/><rect x="136" y="24" width="24" height="3" fill="#00E436"/>
+          <rect x="148" y="8" width="2" height="16" fill="#FFF1E8"/><rect x="150" y="8" width="8" height="6" fill="#FF004D"/>
+          <rect x="56" y="38" width="4" height="16" fill="#008751"/><rect x="52" y="44" width="12" height="6" fill="#008751"/>
+        </svg>
+        <span class="txt"><span class="key">1</span><b>Part 1: The Climb</b><small>Hike the mountain. Who I am, where I’m from, what I love.</small></span>
+      </span>
+    </button>
+    <button class="choice" data-go="city">
+      <span class="card box">
+        <svg viewBox="0 0 160 80" shape-rendering="crispEdges" aria-hidden="true">
+          <rect width="160" height="80" fill="#7E2553"/><rect width="160" height="30" fill="#1D2B53"/>
+          <rect x="70" y="8" width="12" height="56" fill="#83769C"/><rect x="74" y="2" width="4" height="8" fill="#83769C"/><rect x="73" y="16" width="6" height="6" fill="#FFEC27"/>
+          <rect x="6" y="36" width="30" height="34" fill="#AB5236"/><rect x="40" y="28" width="26" height="42" fill="#5F574F"/><rect x="88" y="32" width="28" height="38" fill="#AB5236"/><rect x="120" y="22" width="34" height="48" fill="#5F574F"/>
+          <g fill="#FFEC27"><rect x="12" y="42" width="4" height="4"/><rect x="24" y="50" width="4" height="4"/><rect x="46" y="34" width="4" height="4"/><rect x="56" y="46" width="4" height="4"/><rect x="94" y="40" width="4" height="4"/><rect x="128" y="30" width="4" height="4"/><rect x="140" y="44" width="4" height="4"/></g>
+          <rect x="0" y="70" width="160" height="4" fill="#C2C3C7"/><rect x="0" y="74" width="160" height="6" fill="#5F574F"/>
+        </svg>
+        <span class="txt"><span class="key">2</span><b>Part 2: The City</b><small>Walk across Philly. My work, projects and skills.</small></span>
+      </span>
+    </button>
+  </div>
+  <p class="plain">No time to play? <a href="#resume" data-go="resume">See the plain resume</a></p>
+</section>
+
+<!-- GAME -->
+<div class="game hidden" id="game">
+  <div class="stage" id="stage">
+    <div class="sky s0"></div><div class="sky s1"></div><div class="sky s2"></div><div class="sky s3"></div>
+    <div class="reveal" id="reveal"><p><span>This is the kind of view I grew up with.</span><span>One day I’ll show you the real one, from my window.</span></p></div>
+    <div class="parallax" id="parallax"></div>
+    <div class="world" id="world"></div>
+    <div class="hud">
+      <div><div class="lvl" id="lvl"></div><div class="score hidden" id="score"><span>Records <b id="scR">0</b></span><span>Contracts <b id="scC">0</b></span></div></div>
+      <div class="btns">
+        <button class="pbtn ghost" id="toMenu">Menu</button>
+        <button class="pbtn ghost" data-go="resume">Resume</button>
+      </div>
+    </div>
+    <div class="pad" aria-label="Walk controls">
+      <button id="padL" aria-label="Walk left">◀</button>
+      <button id="padR" aria-label="Walk right">▶</button>
+    </div>
+    <div class="chapter" id="chapter"><small id="chA"></small><b id="chB"></b></div>
+    <div class="complete hidden" id="complete" role="dialog" aria-label="Level complete">
+      <div class="box cbox">
+        <p class="tag">Level complete</p>
+        <h2>The story so far</h2>
+        <div class="totals">
+          <div><b data-to="6500000" data-fmt="M">0</b><span>records migrated</span></div>
+          <div><b data-to="6700">0</b><span>legal contracts processed</span></div>
+          <div><b data-to="100000">0</b><span>artworks in a warehouse</span></div>
+          <div><b data-to="1500">0</b><span>brain scans analyzed</span></div>
+        </div>
+        <p class="cnote">All from a girl from a small village in the Himalayas.</p>
+        <div class="links" style="justify-content:center"><a class="pbtn" href="mailto:hitashikalrawork@gmail.com">Email me</a><button class="pbtn ghost" data-go="mountain">Part 1: The Climb</button><button class="pbtn ghost" id="cClose">Keep exploring</button></div>
+      </div>
+    </div>
+    <div class="hint">← → to walk &nbsp; Space to jump to the next stop</div>
+  </div>
+  <aside class="panel" aria-live="polite">
+    <div class="ptop">
+      <span class="count" id="count"></span>
+      <button class="pbtn" id="nextBtn">Next stop ▸</button>
+    </div>
+    <div class="pbody" id="pbody"></div>
+  </aside>
+</div>
+
+<div class="lightbox hidden" id="lightbox" role="dialog" aria-label="Artwork">
+  <button class="pbtn" id="lbClose">Close ✕</button>
+  <img id="lbImg" alt="">
+  <p id="lbCap"></p>
+</div>
+
+<!-- PLAIN RESUME -->
+<section class="resume hidden" id="resume" aria-label="Resume">
+  <div class="inner" id="resumeInner"></div>
+</section>
+
+<script>
+(function(){
+/* =========================================================
+   EDIT ME: your art, repo links and personal bits live here
+   ========================================================= */
+// Put your art photos in a folder called "art" next to index.html,
+// then list them here. Missing files are skipped automatically.
+// Example: {src:'art/art1.jpg',caption:'Winter in Kangra'}
+var ART=[
+];
+// Paste each project's GitHub repo URL. Empty = links to your GitHub profile.
+var REPOS={
+  'Art History Data Warehouse':'https://github.com/hitashikalra/art-history-data-warehouse',
+  'Swim Performance Analytics':'https://github.com/hitashikalra/swim-performance-analytics'
+};
+// Extra repos shown under "More on GitHub"
+var MORE_REPOS=[
+  ['Kangra Valley Weather Stream','https://github.com/hitashikalra/kangra-valley-weather-stream'],
+  ['Finnish Learning Analytics','https://github.com/hitashikalra/finnish-learning-analytics']
+];
+// Photos for the "Home" stop (free-licensed, from Wikimedia Commons)
+var HOME_PICS=[
+  ['Dhauladhar_Range_from_Naddi_Village.jpg','The Dhauladhar range from Naddi village'],
+  ['Triund_sunrise_over_the_Dhauladhars_(8680900740).jpg','Sunrise over the Dhauladhars'],
+  ['Dhauladhars_laden_with_snow_(16260095466).jpg','The Dhauladhars after snowfall'],
+  ['Sun_setting_on_the_Dhauladhars_(16100095489).jpg','Sunset on the Dhauladhars']
+];
+/* ================= content ================= */
+var EMAIL='hitashikalrawork@gmail.com';
+var LINKS='<div class="links"><a class="pbtn" href="mailto:'+EMAIL+'">Email me</a><a class="pbtn ghost" href="https://linkedin.com/in/hitashikalra" target="_blank" rel="noopener">LinkedIn</a><a class="pbtn ghost" href="https://github.com/hitashikalra" target="_blank" rel="noopener">GitHub</a></div>';
+
+var EXP=[
+ {co:'STAR Scholar, Drexel University',where:'Philadelphia, USA',role:'Machine Learning Research Intern',when:'June 2023 - September 2023',sign:'Drexel Lab',bullets:[
+  'Selected among the top 1% of Drexel’s incoming class to conduct research with Dr. Yusuf on 1,500 brain scans by building a Python noise-reduction and feature-extraction pipeline that surfaced 30+ connectomics features for downstream analysis.',
+  'Achieved 72% accuracy in sex classification from brain connectivity patterns by training a Support Vector Machine (SVM) with the extracted features, while streamlining the analysis workflow to reduce manual processing time by 49%.']},
+ {co:'Jindal Steel Works',where:'Mumbai, India',role:'ML/AI Engineer',when:'April 2024 - September 2024',sign:'Jindal Steel',bullets:[
+  'Engineered a RAG system using Llama models with Pinecone vector indexing on AWS to analyze 3,700+ legal contracts, boosting query accuracy by 35% and accelerating contract review workflows for legal teams.',
+  'Built a document-embedding pipeline using Python and Pinecone to store and query legal PDFs as vector embeddings, achieving 40% higher semantic search precision and enabling real-time clause retrieval.',
+  'Developed a scalable FastAPI backend with asynchronous request handling, reducing API latency by 47%, while integrating Grafana dashboards to monitor performance.']},
+ {co:'Portnoff Law Associates',where:'Norristown, PA',role:'Data Engineer',when:'April 2025 - September 2025',sign:'Portnoff Law',bullets:[
+  'Built a GenAI-powered validation pipeline using Python and OpenAI GPT-4 to analyze 1K+ weekly data quality anomalies, reducing manual QA from 15 to 3 hours.',
+  'Designed an ETL pipeline using SQL and PowerShell cmdlets to migrate 2M+ legal records from legacy Hubbard to new RMS PostgreSQL, implementing schema mappings and integrity checks to improve validation pass rates from 72% to 97%.',
+  'Implemented GitHub Actions CI/CD pipelines for ETL testing and deployment, reducing production failures through pre-deployment validation and automated Slack alerts.']},
+ {co:'InterDigital',where:'Conshohocken, PA',role:'Information Systems Intern',when:'April 2026 - September 2026',sign:'InterDigital',bullets:[
+  'Reduced active oversight of a 4.5M+ record data migration from around 3 hours/day to under 15 minutes/day by automating ETL with Apache Airflow, including task dependencies, retries, and failure alerting.',
+  'Improved transformation performance by ~65%, reducing runtime from ~2.5 hours to ~50 minutes by migrating large-scale deduplication workloads from Pandas to PySpark and enabling distributed processing.',
+  'Reduced data-quality issue detection from weeks to the same day by implementing 10+ automated validation checks for missing fields, duplicate IDs, and schema changes, with Salesforce validation rules and Flows to enforce data integrity.',
+  'Converted 3,000+ legal contract PDFs into structured datasets by building a GPT-4 extraction pipeline with Python and SQL for field validation and normalization, supporting InterDigital’s IP licensing operations.']}
+];
+var PROJ=[
+ {name:'Art History Data Warehouse',stack:'Snowflake, dbt, SQL, Python',bullets:['Built a Snowflake data warehouse for 100,000+ open-access museum artworks, using dbt to develop modular staging and analytics models for querying trends across artistic periods, mediums, and movements.']},
+ {name:'Swim Performance Analytics',stack:'Apache Airflow, Python, Pandas, SQL',bullets:['Built an Airflow-orchestrated analytics pipeline to ingest and analyze race splits across freestyle and backstroke, tracking pace trends by distance and stroke over 6 months of training.']}
+];
+var SKILLS=[
+ ['Languages','Python, Java, SQL, C/C++, JavaScript, PowerShell, SOQL, Bash, HTML/CSS'],
+ ['ML & AI','PyTorch, TensorFlow, Scikit-learn, OpenAI GPT-4, Llama, NumPy, Pandas, Matplotlib, Seaborn'],
+ ['Data Engineering Tools','Apache Airflow, dbt, Snowflake, Kafka, PySpark, PostgreSQL, OpenSearch, Pinecone, MATLAB'],
+ ['Cloud, DevOps & Frameworks','AWS, Docker, Git, Linux, Flask, React, Grafana, Fluent Bit'],
+ ['APIs & Tools','HERE API, Slack API, FastAPI, ETL Pipelines, CI/CD Workflows, Salesforce']
+];
+var LEAD=['Resident Assistant','Drexel Global Engagement Scholar','Peer Mentor - Women In Computing Society','Marketing Ambassador'];
+
+function repo(n){return REPOS[n]||'https://github.com/hitashikalra';}
+function ul(a){return '<ul>'+a.map(function(b){return '<li>'+b+'</li>';}).join('')+'</ul>';}
+function expHTML(e){return '<p class="tag">Work experience</p><h2>'+e.co+'</h2><p class="meta"><b>'+e.role+'</b><br>'+e.where+'<br>'+e.when+'</p>'+ul(e.bullets);}
+
+var PICS=ART.concat(HOME_PICS.map(function(h){return {src:'https://commons.wikimedia.org/wiki/Special:FilePath/'+h[0]+'?width=1200',thumb:'https://commons.wikimedia.org/wiki/Special:FilePath/'+h[0]+'?width=500',caption:h[1],credit:'https://commons.wikimedia.org/wiki/File:'+h[0]};}));
+function gallery(list,offset){return '<div class="gallery">'+list.map(function(a,i){return '<figure><button class="art" data-art="'+(offset+i)+'" aria-label="Open photo: '+(a.caption||'artwork')+'"><img src="'+(a.thumb||a.src)+'" alt="'+(a.caption||'Oil pastel artwork by Hitashi')+'" loading="lazy" onerror="this.closest(\'figure\').remove()"></button>'+(a.caption?'<figcaption>'+a.caption+(a.credit?' <a href="'+a.credit+'" target="_blank" rel="noopener">(photo credit)</a>':'')+'</figcaption>':'')+'</figure>';}).join('')+'</div>';}
+var HOME_GALLERY=gallery(PICS.slice(ART.length),ART.length);
+var GALLERY=gallery(ART,0);
+var REVEAL_PIC='https://commons.wikimedia.org/wiki/Special:FilePath/'+HOME_PICS[0][0]+'?width=2000';
+function ch(n,t){return '<p class="tag">Chapter '+n+'</p><h2>'+t+'</h2>';}
+var LEVELS={
+ mountain:{name:'Part 1: The Climb',sub:'Who I am',card:['Part 1','The Climb'],other:'city',otherName:'Part 2: The City ▸',stops:[
+  {sign:'The Village',say:'Every story starts somewhere. Mine starts in a tiny village in the Himalayas.',
+   html:ch(1,'A small village in the Himalayas')+'<p>I grew up in Kangra, Himachal Pradesh, with mountains outside my window. I love home. When you meet me, I’ll show you the view from my room’s window. It’s very pretty.</p><p>Until then, here’s a peek at the range I grew up with:</p>'+HOME_GALLERY},
+  {sign:'My Dad',say:'My first teacher? My dad. He’s still my best friend.',
+   html:ch(2,'My best friend is my dad')+'<p>He has mentored me my whole life. The things he taught me are the things I care about most: be kind, never hurt someone’s feelings, knowingly or unknowingly, and help everyone you can.</p><p>Everything else on this mountain sits on top of that.</p>'},
+  {sign:'Six Languages',say:'Quick fact: I speak six languages. Bet you can’t guess them all.',
+   html:ch(3,'Six languages')+'<p>Six languages so far, and Finnish is working its way up to number seven.</p><p>Ask me which ones when we meet.</p>'},
+  {sign:'The Spark',say:'Then one professor changed everything.',
+   html:ch(4,'How I fell in love with data')+'<p>I took a course by a CMU professor who loved data so much it was contagious. Watching him, I fell for it completely.</p><p>That’s the whole reason the second half of this story exists.</p>'},
+  {sign:'Philadelphia',say:'So I packed my bags for Philadelphia.',
+   html:ch(5,'A new home in Philly')+'<p>Drexel University, Computer Science, class of 2027. Far from the mountains, but I built a life here too:</p>'+ul(LEAD)},
+  {sign:'The Pool',say:'When my head is full, I swim.',
+   html:ch(6,'In the water')+'<p>Freestyle and backstroke. I logged my race splits for six months and, being me, turned them into a data pipeline. It’s waiting for you in Part 2.</p>'},
+  {sign:'Stillness',say:'And when it’s still full, I sit and breathe.',
+   html:ch(7,'Stillness')+'<p>Meditation is how I stay steady between classes, work and RA duty.</p>'},
+  {sign:'Color',say:'Some days I trade code for color.',
+   html:ch(8,'Oil pastels')+'<p>Smudged fingers, no undo button. It’s the opposite of my day job and I love it.'+(ART.length?' Tap a piece to see it bigger.':' My pieces are going up here soon.')+'</p>'+GALLERY},
+  {sign:'Hei!',say:'Hei! Opiskelen suomea. (I’m learning Finnish.)',
+   html:ch(9,'Language number seven')+'<p>Finnish is next on the list. Fifteen grammatical cases, zero regrets. Slowly getting there.</p>'},
+  {sign:'Comfort Show',say:'Comfort show, forever: Young Sheldon.',
+   html:ch(10,'The real me')+'<p>Bubbly, charming, very loving and passionate. I will talk philosophy with you for hours, and Young Sheldon is my all time favourite show.</p><p>One more step. Look up.</p>'},
+  {sign:'Summit',end:true,reveal:true,say:'Look.',
+   html:'<p class="tag">The top</p><h2>You made it</h2><p>That’s the kind of view I grew up with. One day I’ll show you the real one, from my window.</p><p>But the story doesn’t end on the mountain. The girl from the village went on to move millions of records in Philly.</p>'+LINKS}
+ ]},
+ city:{name:'Part 2: The City',sub:'What I’ve built',card:['Part 2','The City'],other:'mountain',otherName:'Part 1: The Climb ▸',score:true,stops:[
+  {sign:'Drexel',say:'Philadelphia. New city, new start.',
+   html:ch(1,'Drexel University')+'<p class="meta"><b>Bachelor of Science in Computer Science</b><br>Philadelphia, PA<br>Anticipated graduation - June 2027</p><p>Watch the counters at the top. Every stop from here adds to them.</p>'},
+  {sign:EXP[0].sign,say:'First summer. Still a freshman. 1,500 brain scans.',pop:'+1,500 brain scans',add:{scans:1500},html:ch(2,'The first big break')+expHTML(EXP[0]).replace('<p class="tag">Work experience</p>','')},
+  {sign:EXP[1].sign,say:'Back to India, teaching a computer to read 3,700 contracts.',pop:'+3,700 contracts',add:{contracts:3700},html:ch(3,'Mumbai')+expHTML(EXP[1]).replace('<p class="tag">Work experience</p>','')},
+  {sign:EXP[2].sign,say:'2 million records. 72% passed validation. I got it to 97%.',pop:'+2M records',add:{records:2000000},html:ch(4,'The big migration')+expHTML(EXP[2]).replace('<p class="tag">Work experience</p>','')},
+  {sign:EXP[3].sign,say:'4.5 million records, babysat 3 hours a day. I got it to 15 minutes.',pop:'+4.5M records',add:{records:4500000,contracts:3000},html:ch(5,'The boss level')+expHTML(EXP[3]).replace('<p class="tag">Work experience</p>','')},
+  {sign:'Projects',say:'After hours, I kept building.',pop:'+100,000 artworks',add:{art:100000},
+   html:ch(6,'Side quests')+PROJ.map(function(p){return '<h2>'+p.name+'</h2><p class="stack">'+p.stack+'</p>'+ul(p.bullets)+'<div class="links"><a class="pbtn" href="'+repo(p.name)+'" target="_blank" rel="noopener">View on GitHub ▸</a></div>';}).join('<hr>')+'<hr><h2>More on GitHub</h2><div class="links">'+MORE_REPOS.map(function(r){return '<a class="pbtn ghost" href="'+r[1]+'" target="_blank" rel="noopener">'+r[0]+' ▸</a>';}).join('')+'</div>'},
+  {sign:'Skill Shop',say:'Here’s everything in my backpack.',
+   html:ch(7,'Inventory')+'<div class="inv">'+SKILLS.map(function(s){return '<div><h3>'+s[0]+'</h3><div class="slots">'+s[1].split(', ').map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>';}).join('')+'</div>'},
+  {sign:'Say Hi',end:true,complete:true,say:'That’s the story so far. The next chapter could be with you.',
+   html:'<p class="tag">Next chapter</p><h2>Let’s write it together</h2><p>I’m looking for data engineering roles starting June 2027. If you read this far, I’d love to hear from you.</p>'+LINKS}
+ ]}
+};
+
+/* ================= plain resume ================= */
+document.getElementById('resumeInner').innerHTML=
+ '<div class="rtop"><div><h1>Hitashi Kalra</h1><p class="contact"><a href="mailto:'+EMAIL+'">'+EMAIL+'</a> | <a href="https://linkedin.com/in/hitashikalra">linkedin.com/in/hitashikalra</a> | <a href="https://github.com/hitashikalra">github.com/hitashikalra</a></p></div>'+
+ '<div class="btns" style="display:flex;gap:8px"><button class="pbtn" id="playBtn">Play the game</button><button class="pbtn ghost" onclick="window.print()">Print</button></div></div>'+
+ '<h2>Education</h2><h3>Drexel University</h3><p class="rmeta">Bachelor of Science in Computer Science. Philadelphia, PA. Anticipated graduation - June 2027</p>'+
+ '<h2>Work Experience</h2>'+EXP.slice().reverse().map(function(e){return '<h3>'+e.co+'</h3><p class="rmeta">'+e.role+'. '+e.where+'. '+e.when+'</p>'+ul(e.bullets);}).join('')+
+ '<h2>Technical Skills</h2><ul>'+SKILLS.map(function(s){return '<li><b>'+s[0]+':</b> '+s[1]+'</li>';}).join('')+'</ul>'+
+ '<h2>Projects</h2>'+PROJ.map(function(p){return '<h3><a href="'+repo(p.name)+'">'+p.name+'</a></h3><p class="rmeta">'+p.stack+'</p>'+ul(p.bullets);}).join('')+
+ '<h2>Leadership & Engagements</h2><p>'+LEAD.join(' | ')+' | Swimming | Meditation | Oil Pastels | Learning Finnish</p>';
+
+/* ================= sprites ================= */
+var PAL={H:'#2A1B3D',S:'#C68A5E',E:'#1D2B53',T:'#FFA300',B:'#FF004D',P:'#3B5DC9',K:'#5F574F'};
+var TOP=["...HHHHH....","..HHHHHHH...","..HHSSSSSH..","..HHSSSES...","..HHSSSSS...","..HHH.SS....","..HHTTTTT...","..BTTTTTTT..","..BTTTTTTS..","..BTTTTTT...","...TTTTTT..."];
+var LEG_A=["...PPPPP....","...PP..PP...","..PP....PP..","..PP....PP..",".KKK....KKK."];
+var LEG_B=["...PPPPP....","....PPP.....","....PPP.....","....PP......","...KKKK....."];
+function sprite(rows,cls){var r='';rows.forEach(function(row,y){for(var x=0;x<row.length;x++){var c=row[x];if(c!=='.')r+='<rect x="'+x+'" y="'+y+'" width="1.02" height="1.02" fill="'+PAL[c]+'"/>';}});
+ return '<svg class="'+cls+'" viewBox="0 0 12 16" width="48" height="64" shape-rendering="crispEdges">'+r+'</svg>';}
+var PLAYER_HTML=sprite(TOP.concat(LEG_A),'fA')+sprite(TOP.concat(LEG_B),'fB');
+
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function R(x,y,w,h,f,o){return '<rect x="'+Math.round(x)+'" y="'+Math.round(y)+'" width="'+Math.round(w)+'" height="'+Math.round(h)+'" fill="'+f+'"'+(o?' opacity="'+o+'"':'')+'/>';}
+
+/* ================= game state ================= */
+var stage=document.getElementById('stage'),world=document.getElementById('world'),par=document.getElementById('parallax');
+var pbody=document.getElementById('pbody'),countEl=document.getElementById('count'),lvlEl=document.getElementById('lvl');
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var L=null,key=null,W=0,Hw=0,rise=0,SW=0,SH=0,stopsX=[],signs=[],player=null;
+var px=0,dir=0,target=null,facing=1,active=-1,found={},running=false,lastT=0,stepT=0,camX=0,camY=0;
+var SPEED=300;
+
+function groundY(x){
+  if(key==='city')return Hw-96;
+  var t=Math.max(0,Math.min(1,(x-260)/(W-620)));
+  var qx=Math.floor(x/32)*32; t=Math.max(0,Math.min(1,(qx-260)/(W-620)));
+  return Math.round((Hw-96-rise*t)/16)*16;
+}
+
+function build(){
+  SW=stage.clientWidth;SH=stage.clientHeight;
+  var n=L.stops.length,gap=Math.max(560,SW*0.8);
+  stopsX=L.stops.map(function(_,i){return 420+i*gap;});
+  W=stopsX[n-1]+Math.max(420,SW*0.6);
+  rise=key==='mountain'?Math.max(520,SH*1.1):0;Hw=SH+rise;
+  var rand=rng(key==='city'?7:3),s='';
+
+  if(key==='mountain'){
+    // hill, stepped
+    for(var x=0;x<W;x+=32){var g=groundY(x);
+      s+=R(x,g,32,Hw-g,'#AB5236')+R(x,g-6,32,8,'#00E436')+R(x,g+2,32,6,'#008751');
+      if(rand()<.35)s+=R(x+8+rand()*12,g+20+rand()*Hw*.1,8,6,'#5F574F');
+      if(rand()<.25)s+=R(x+4+rand()*16,g+40+rand()*Hw*.2,6,6,'#7a3c26');}
+    // pines away from signs
+    for(var x2=60;x2<W-60;x2+=46+rand()*70){
+      if(stopsX.some(function(sx){return Math.abs(sx-x2)<120;}))continue;
+      var gy=groundY(x2),h=rand()<.5?1:1.4;
+      s+=R(x2-4,gy-16*h,8,16*h,'#5a2a17');
+      [40,32,24,16,8].forEach(function(w,i){s+=R(x2-w/2*h,gy-16*h-(i+1)*9*h,w*h,9*h,i%2?'#008751':'#00733f');});}
+    // summit flag
+    var fx=stopsX[n-1]+120,fy=groundY(fx);
+    s+=R(fx,fy-110,6,110,'#FFF1E8')+R(fx+6,fy-110,44,28,'#FF004D')+R(fx+6,fy-96,44,6,'#c8003c');
+    // clouds parallax
+    var c='';for(var i=0;i<14;i++){var cx=i*260+rand()*120,cy=40+rand()*SH*.35,cw=60+rand()*60;
+      c+=R(cx,cy,cw,14,'#FFF1E8')+R(cx+14,cy-10,cw-30,12,'#FFF1E8')+R(cx-10,cy+10,cw+20,10,'#E8DCD3');}
+    par.innerHTML='<svg width="'+(W*0.5+SW)+'" height="'+SH+'">'+c+'</svg>';
+  } else {
+    var g0=groundY(0);
+    // skyline parallax with a city hall tower
+    var c2='',x3=0;while(x3<W*0.5+SW){var bw=40+rand()*70,bh=SH*.25+rand()*SH*.35;c2+=R(x3,g0-bh,bw,bh+200,rand()<.5?'#83769C':'#6d5f88');x3+=bw+4;}
+    var th=SH*.62,tx=SW*0.55;c2+=R(tx,g0-th,44,th,'#9a8db3')+R(tx+12,g0-th-40,20,40,'#9a8db3')+R(tx+19,g0-th-62,6,22,'#9a8db3')+R(tx+12,g0-th+24,20,20,'#FFEC27');
+    par.innerHTML='<svg width="'+(W*0.5+SW)+'" height="'+SH+'">'+c2+'</svg>';
+    // street
+    s+=R(0,g0,W,12,'#C2C3C7')+R(0,g0+12,W,Hw-g0,'#5F574F');
+    for(var lx=0;lx<W;lx+=80)s+=R(lx,g0+40,40,6,'#FFEC27');
+    // buildings
+    var COLS=['#AB5236','#5F574F','#7E2553','#1D2B53','#008751','#AB5236','#5F574F','#29ADFF'];
+    var bx=-20;
+    function bld(x,w,h,col,big){var y=g0-h,o=R(x,y,w,h,col)+R(x,y,w,6,'rgba(0,0,0,.25)');
+      for(var wy=y+18;wy<g0-40;wy+=30)for(var wx=x+12;wx<x+w-20;wx+=26)o+=R(wx,wy,12,16,rand()<.6?'#FFEC27':'#1D2B53');
+      o+=R(x+w/2-14,g0-38,28,38,'#1D2B53');if(big)o+=R(x+w/2-30,g0-44,60,6,'#FFF1E8');return o;}
+    stopsX.forEach(function(sx,i){
+      while(bx<sx-170){var fw=90+rand()*70;if(bx+fw>sx-170)fw=sx-170-bx;if(fw>30)s+=bld(bx,fw,90+rand()*Math.min(160,g0*.35),rand()<.5?'#8a3f2a':'#4a4440');bx+=fw+6;}
+      var bh=Math.min(g0-70,180+rand()*170);s+=bld(sx-150,300,bh,COLS[i%COLS.length],true);bx=sx+156;});
+    while(bx<W){var fw2=90+rand()*70;s+=bld(bx,fw2,90+rand()*120,'#8a3f2a');bx+=fw2+6;}
+    // lamps
+    for(var lp=200;lp<W;lp+=340){if(stopsX.some(function(sx){return Math.abs(sx-lp)<170;}))continue;s+=R(lp,g0-90,6,90,'#2A1B3D')+R(lp-8,g0-98,22,10,'#FFEC27');}
+  }
+
+  world.innerHTML='<svg width="'+W+'" height="'+Hw+'">'+s+'</svg>';
+  world.style.width=W+'px';world.style.height=Hw+'px';
+  signs=L.stops.map(function(st,i){var d=document.createElement('div');var g=groundY(stopsX[i]);
+    d.className='sign '+(key==='city'?'city':'post')+(found[key+i]?' found':'');d.textContent=st.sign;d.style.left=stopsX[i]+'px';
+    d.style.top=(key==='city'?g-128:g-140)+'px';world.appendChild(d);return d;});
+  player=document.createElement('div');player.className='player';player.innerHTML=PLAYER_HTML;world.appendChild(player);
+  bubble=document.createElement('div');bubble.className='bubble';bubble.setAttribute('aria-hidden','true');world.appendChild(bubble);
+  px=Math.min(Math.max(px,60),W-60);place();
+}
+
+function place(){
+  var g=groundY(px);player.style.left=(px-24)+'px';player.style.top=(g-62)+'px';if(bubble){bubble.style.left=px+'px';bubble.style.top=(g-76)+'px';}
+  camX=Math.max(0,Math.min(W-SW,px-SW*0.33));
+  camY=Math.max(0,Math.min(Hw-SH,g-SH*0.7));
+  world.style.transform='translate('+(-camX)+'px,'+(-camY)+'px)';
+  par.style.transform='translateX('+(-camX*0.5)+'px)';
+}
+
+function updateCount(){var n=L.stops.length,f=0;for(var i=0;i<n;i++)if(found[key+i])f++;countEl.innerHTML='Stops found <b>'+f+'/'+n+'</b>';}
+
+function showIntro(){
+  pbody.innerHTML='<p class="tag">'+L.sub+'</p><h2>'+L.name+'</h2><p>'+(key==='mountain'?'This half of the story is about who I am. Walk up the mountain and stop at each sign.':'This half is about what I’ve built. Walk across the city and watch the counters climb.')+'</p><div class="controls"><kbd>← →</kbd><span>walk (or A and D)</span><kbd>Space</kbd><span>jump to the next stop</span><kbd>Esc</kbd><span>back to the menu</span></div><p>On a phone, use the arrows on screen or the Next stop button.</p>';
+}
+var bubble=null,popT=0,stats={records:0,contracts:0,scans:0,art:0},sayTimer=null;
+var reveal=document.getElementById('reveal'),scoreEl=document.getElementById('score'),completeEl=document.getElementById('complete');
+function typeInto(el,text,done){clearInterval(sayTimer);if(reduce){el.textContent=text;done&&done();return;}var i=0;el.textContent='';sayTimer=setInterval(function(){i+=2;el.textContent=text.slice(0,i);if(i>=text.length){clearInterval(sayTimer);done&&done();}},28);}
+function fmtN(n){return n>=1e6?(n/1e6).toFixed(1).replace('.0','')+'M':Math.round(n).toLocaleString('en-US');}
+function renderScore(){document.getElementById('scR').textContent=fmtN(stats.records);document.getElementById('scC').textContent=fmtN(stats.contracts);scoreEl.classList.remove('bump');void scoreEl.offsetWidth;scoreEl.classList.add('bump');}
+function popAt(text){var d=document.createElement('div');d.className='pop';d.textContent=text;d.style.left=px+'px';d.style.top=(groundY(px)-150)+'px';world.appendChild(d);setTimeout(function(){d.remove();},1900);}
+function countUpAll(){[].forEach.call(completeEl.querySelectorAll('[data-to]'),function(b){var to=+b.dataset.to,t0=performance.now();(function st(t){var p=Math.min(1,(t-t0)/1600),k=1-Math.pow(1-p,3),v=to*k;b.textContent=(b.dataset.fmt==='M'?(v/1e6).toFixed(1)+'M':Math.round(v).toLocaleString('en-US'))+'+';if(p<1)requestAnimationFrame(st);})(t0);});}
+function setSky(){if(key!=='mountain')return;var p=Math.max(0,Math.min(.999,(px-stopsX[0])/(stopsX[stopsX.length-1]-stopsX[0]+1)));var k=Math.floor(p*4);
+  [].forEach.call(stage.querySelectorAll('.sky'),function(e,i){e.classList.toggle('on',i===k);});}
+function arrive(i){var st=L.stops[i],first=!found[key+i];
+  found[key+i]=1;updateCount();showStop(i);
+  if(st.say){bubble.classList.add('on');typeInto(bubble,st.say);}
+  if(first&&st.add){for(var k in st.add)stats[k]+=st.add[k];renderScore();}
+  if(first&&st.pop)popAt(st.pop);
+  if(st.reveal){reveal.style.backgroundImage='url("'+REVEAL_PIC+'")';reveal.classList.add('on');}
+  if(st.complete&&first){setTimeout(function(){completeEl.classList.remove('hidden');countUpAll();},2200);}
+}
+function leave(i){bubble.classList.remove('on');clearInterval(sayTimer);if(L.stops[i]&&L.stops[i].reveal)reveal.classList.remove('on');}
+function showStop(i){
+  var st=L.stops[i];var html=st.html;
+  if(st.end)html+='<hr><p>Done here?</p><div class="links"><button class="pbtn" data-go="'+L.other+'">'+L.otherName+'</button><button class="pbtn ghost" data-go="menu">Menu</button></div>';
+  pbody.innerHTML=html;pbody.scrollTop=0;
+}
+
+function loop(t){
+  if(!running)return;var dt=Math.min(.05,(t-lastT)/1000||0);lastT=t;var v=0;
+  if(dir){v=dir*SPEED;target=null;}
+  else if(target!==null){var d=target-px;if(Math.abs(d)<=SPEED*1.4*dt){px=target;target=null;}else v=Math.sign(d)*SPEED*1.4;}
+  px=Math.max(60,Math.min(W-60,px+v*dt));
+  if(v){facing=v>0?1:-1;stepT+=dt;if(stepT>.13){stepT=0;player.classList.toggle('step');}}else player.classList.remove('step');
+  player.classList.toggle('left',facing<0);
+  place();setSky();
+  var near=-1;for(var i=0;i<stopsX.length;i++)if(Math.abs(stopsX[i]-px)<70){near=i;break;}
+  if(near!==active){
+    if(active>=0){signs[active].classList.remove('here');leave(active);}
+    if(near>=0){signs[near].classList.add('here','found');arrive(near);}
+    active=near;}
+  requestAnimationFrame(loop);
+}
+
+function nextStop(){for(var i=0;i<stopsX.length;i++)if(stopsX[i]>px+20){target=stopsX[i];return;}target=stopsX[stopsX.length-1];}
+
+/* ================= screens ================= */
+var title=document.getElementById('title'),game=document.getElementById('game'),resume=document.getElementById('resume');
+function start(k){
+  key=k;L=LEVELS[k];active=-1;target=null;dir=0;px=120;
+  title.classList.add('hidden');resume.classList.add('hidden');game.classList.remove('hidden');
+  stage.className='stage '+k;lvlEl.innerHTML='<b>'+L.name+'</b>'+L.sub;
+  reveal.classList.remove('on');completeEl.classList.add('hidden');
+  scoreEl.classList.toggle('hidden',!L.score);if(L.score){stats={records:0,contracts:0,scans:0,art:0};for(var i=0;i<L.stops.length;i++)if(found[k+i]&&L.stops[i].add)for(var q in L.stops[i].add)stats[q]+=L.stops[i].add[q];renderScore();}
+  build();updateCount();showIntro();setSky();
+  var chEl=document.getElementById('chapter');document.getElementById('chA').textContent=L.card[0];document.getElementById('chB').textContent=L.card[1];
+  if(!reduce){chEl.classList.add('on');setTimeout(function(){chEl.classList.remove('on');},1500);}
+  if(!running){running=true;lastT=performance.now();requestAnimationFrame(loop);}
+  history.replaceState(null,'',k==='city'?'#philly':'#hike');
+}
+function menu(){running=false;game.classList.add('hidden');resume.classList.add('hidden');title.classList.remove('hidden');history.replaceState(null,'',location.pathname);}
+function showResume(){running=false;game.classList.add('hidden');title.classList.add('hidden');resume.classList.remove('hidden');resume.scrollTop=0;history.replaceState(null,'','#resume');}
+
+document.addEventListener('click',function(e){var b=e.target.closest('[data-go]');if(!b)return;e.preventDefault();var g=b.dataset.go;
+  if(g==='resume')showResume();else if(g==='menu')menu();else start(g);});
+document.getElementById('toMenu').onclick=menu;
+document.getElementById('cClose').onclick=function(){completeEl.classList.add('hidden');};
+(function(){var h=document.getElementById('hook');var t=h.getAttribute('aria-label');if(reduce){h.textContent=t;return;}var i=0;var iv=setInterval(function(){i++;h.textContent=t.slice(0,i);if(i>=t.length)clearInterval(iv);},45);})();
+var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+document.addEventListener('click',function(e){var a=e.target.closest('[data-art]');if(!a)return;var it=PICS[+a.dataset.art];lbImg.src=it.src;lbImg.alt=it.caption||'Artwork';lbCap.textContent=it.caption||'';lb.classList.remove('hidden');document.getElementById('lbClose').focus();});
+function closeLb(){lb.classList.add('hidden');}
+document.getElementById('lbClose').onclick=closeLb;lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
+document.getElementById('playBtn').onclick=menu;
+document.getElementById('nextBtn').onclick=nextStop;
+
+addEventListener('keydown',function(e){
+  if(!title.classList.contains('hidden')){if(e.key==='1')start('mountain');if(e.key==='2')start('city');return;}
+  if(game.classList.contains('hidden'))return;
+  if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){dir=1;e.preventDefault();}
+  else if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){dir=-1;e.preventDefault();}
+  else if(e.key===' '||e.key==='Enter'){if(document.activeElement&&document.activeElement.tagName==='A')return;nextStop();e.preventDefault();}
+  else if(e.key==='Escape'){if(!lb.classList.contains('hidden'))closeLb();else menu();}
+});
+addEventListener('keyup',function(e){if(['ArrowRight','ArrowLeft','a','A','d','D'].indexOf(e.key)>-1)dir=0;});
+function hold(id,d){var b=document.getElementById(id);
+  b.addEventListener('pointerdown',function(e){e.preventDefault();dir=d;b.setPointerCapture(e.pointerId);});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){b.addEventListener(ev,function(){if(dir===d)dir=0;});});}
+hold('padL',-1);hold('padR',1);
+var rt;addEventListener('resize',function(){if(!running)return;clearTimeout(rt);rt=setTimeout(function(){var f=px/W;active=-1;build();px=f*W;place();},150);});
+
+// deep links: #hike, #philly, #resume
+var h=location.hash;if(h==='#hike')start('mountain');else if(h==='#philly')start('city');else if(h==='#resume')showResume();
+})();
+</script>
+</body>
+</html>
