@@ -256,7 +256,7 @@ button{font:inherit;color:inherit;cursor:pointer}
         <h2>The story so far</h2>
         <div class="totals">
           <div><b data-to="6500000" data-fmt="M">0</b><span>records migrated</span></div>
-          <div><b data-to="6700">0</b><span>legal contracts processed</span></div>
+          <div><b data-to="3000">0</b><span>legal contracts turned into data</span></div>
           <div><b data-to="100000">0</b><span>artworks in a warehouse</span></div>
           <div><b data-to="1500">0</b><span>brain scans analyzed</span></div>
         </div>
@@ -299,13 +299,10 @@ var ART=[
 // Paste each project's GitHub repo URL. Empty = links to your GitHub profile.
 var REPOS={
   'Art History Data Warehouse':'https://github.com/hitashikalra/art-history-data-warehouse',
-  'Swim Performance Analytics':'https://github.com/hitashikalra/swim-performance-analytics'
+  'Swim Performance Analytics':'https://github.com/hitashikalra/swim-performance-analytics',
+  'Kangra Valley Weather Stream':'https://github.com/hitashikalra/kangra-valley-weather-stream',
+  'Finnish Learning Analytics':'https://github.com/hitashikalra/finnish-learning-analytics'
 };
-// Extra repos shown under "More on GitHub"
-var MORE_REPOS=[
-  ['Kangra Valley Weather Stream','https://github.com/hitashikalra/kangra-valley-weather-stream'],
-  ['Finnish Learning Analytics','https://github.com/hitashikalra/finnish-learning-analytics']
-];
 // Photos for the "Home" stop (free-licensed, from Wikimedia Commons)
 var HOME_PICS=[
   ['Dhauladhar_Range_from_Naddi_Village.jpg','The Dhauladhar range from Naddi village'],
@@ -317,35 +314,37 @@ var HOME_PICS=[
 var EMAIL='hitashikalrawork@gmail.com';
 var LINKS='<div class="links"><a class="pbtn" href="mailto:'+EMAIL+'">Email me</a><a class="pbtn ghost" href="https://linkedin.com/in/hitashikalra" target="_blank" rel="noopener">LinkedIn</a><a class="pbtn ghost" href="https://github.com/hitashikalra" target="_blank" rel="noopener">GitHub</a></div>';
 
+var EDU={school:'Drexel University',where:'Philadelphia, PA',degree:'Bachelor of Science in Computer Science',when:'September 2022 - June 2027',certs:'AWS Certified Cloud Practitioner | Databricks Certified Data Engineer Associate'};
 var EXP=[
- {co:'STAR Scholar, Drexel University',where:'Philadelphia, USA',role:'Machine Learning Research Intern',when:'June 2023 - September 2023',sign:'Drexel Lab',bullets:[
+ {co:'STAR Scholar, Drexel University',where:'Philadelphia, PA',role:'Machine Learning Research Intern',when:'June 2023 - September 2023',sign:'Drexel',bullets:[
   'Selected among the top 1% of Drexel’s incoming class to conduct research with Dr. Yusuf on 1,500 brain scans by building a Python noise-reduction and feature-extraction pipeline that surfaced 30+ connectomics features for downstream analysis.',
   'Achieved 72% accuracy in sex classification from brain connectivity patterns by training a Support Vector Machine (SVM) with the extracted features, while streamlining the analysis workflow to reduce manual processing time by 49%.']},
- {co:'Jindal Steel Works',where:'Mumbai, India',role:'ML/AI Engineer',when:'April 2024 - September 2024',sign:'Jindal Steel',bullets:[
-  'Engineered a RAG system using Llama models with Pinecone vector indexing on AWS to analyze 3,700+ legal contracts, boosting query accuracy by 35% and accelerating contract review workflows for legal teams.',
-  'Built a document-embedding pipeline using Python and Pinecone to store and query legal PDFs as vector embeddings, achieving 40% higher semantic search precision and enabling real-time clause retrieval.',
-  'Developed a scalable FastAPI backend with asynchronous request handling, reducing API latency by 47%, while integrating Grafana dashboards to monitor performance.']},
  {co:'Portnoff Law Associates',where:'Norristown, PA',role:'Data Engineer',when:'April 2025 - September 2025',sign:'Portnoff Law',bullets:[
   'Built a GenAI-powered validation pipeline using Python and OpenAI GPT-4 to analyze 1K+ weekly data quality anomalies, reducing manual QA from 15 to 3 hours.',
   'Designed an ETL pipeline using SQL and PowerShell cmdlets to migrate 2M+ legal records from legacy Hubbard to new RMS PostgreSQL, implementing schema mappings and integrity checks to improve validation pass rates from 72% to 97%.',
   'Implemented GitHub Actions CI/CD pipelines for ETL testing and deployment, reducing production failures through pre-deployment validation and automated Slack alerts.']},
  {co:'InterDigital',where:'Conshohocken, PA',role:'Information Systems Intern',when:'April 2026 - September 2026',sign:'InterDigital',bullets:[
   'Reduced active oversight of a 4.5M+ record data migration from around 3 hours/day to under 15 minutes/day by automating ETL with Apache Airflow, including task dependencies, retries, and failure alerting.',
-  'Improved transformation performance by ~65%, reducing runtime from ~2.5 hours to ~50 minutes by migrating large-scale deduplication workloads from Pandas to PySpark and enabling distributed processing.',
+  'Improved transformation performance by ∼65%, reducing runtime from ∼2.5 hours to ∼50 minutes by migrating large-scale deduplication workloads from Pandas to PySpark and enabling distributed processing.',
   'Reduced data-quality issue detection from weeks to the same day by implementing 10+ automated validation checks for missing fields, duplicate IDs, and schema changes, with Salesforce validation rules and Flows to enforce data integrity.',
   'Converted 3,000+ legal contract PDFs into structured datasets by building a GPT-4 extraction pipeline with Python and SQL for field validation and normalization, supporting InterDigital’s IP licensing operations.']}
 ];
 var PROJ=[
  {name:'Art History Data Warehouse',stack:'Snowflake, dbt, SQL, Python',bullets:['Built a Snowflake data warehouse for 100,000+ open-access museum artworks, using dbt to develop modular staging and analytics models for querying trends across artistic periods, mediums, and movements.']},
- {name:'Swim Performance Analytics',stack:'Apache Airflow, Python, Pandas, SQL',bullets:['Built an Airflow-orchestrated analytics pipeline to ingest and analyze race splits across freestyle and backstroke, tracking pace trends by distance and stroke over 6 months of training.']}
+ {name:'Swim Performance Analytics',stack:'Apache Airflow, Python, Pandas, SQL',bullets:['Built an Airflow-orchestrated analytics pipeline to ingest and analyze race splits across freestyle and backstroke, tracking pace trends by distance and stroke over 6 months of training.']},
+ {name:'Kangra Valley Weather Stream',stack:'Kafka, PySpark Structured Streaming, PostgreSQL, Grafana, Docker',bullets:['Built a real-time pipeline streaming weather and air quality data for 4 Himalayan towns through Kafka into Spark, computing hourly sliding-window stats and raising alerts for unhealthy AQI, heavy rain, and cold snaps.']},
+ {name:'Finnish Learning Analytics',stack:'Python, DuckDB, dbt, SQL',bullets:['Built an incremental pipeline loading Anki flashcard review history into DuckDB with watermark-based loads and upserts, using dbt models to track vocabulary retention by word type, time of day, and study streaks.']}
 ];
 var SKILLS=[
- ['Languages','Python, Java, SQL, C/C++, JavaScript, PowerShell, SOQL, Bash, HTML/CSS'],
- ['ML & AI','PyTorch, TensorFlow, Scikit-learn, OpenAI GPT-4, Llama, NumPy, Pandas, Matplotlib, Seaborn'],
- ['Data Engineering Tools','Apache Airflow, dbt, Snowflake, Kafka, PySpark, PostgreSQL, OpenSearch, Pinecone, MATLAB'],
- ['Cloud, DevOps & Frameworks','AWS, Docker, Git, Linux, Flask, React, Grafana, Fluent Bit'],
- ['APIs & Tools','HERE API, Slack API, FastAPI, ETL Pipelines, CI/CD Workflows, Salesforce']
+ ['Languages','Python, SQL, Java, C/C++, JavaScript, PowerShell, SOQL, Bash'],
+ ['Pipelines & Streaming','Apache Airflow, PySpark, Spark Structured Streaming, Kafka, dbt, ETL/ELT'],
+ ['Databases & Warehousing','Snowflake, PostgreSQL, DuckDB, Data Modeling, Data Validation'],
+ ['ML & AI','OpenAI GPT-4, Scikit-learn, PyTorch, Pandas, NumPy'],
+ ['Cloud','AWS (S3, EC2, Lambda, Glue, Redshift, IAM, CloudWatch)'],
+ ['DevOps & Monitoring','Docker, Git, GitHub Actions, CI/CD, Linux, Grafana'],
+ ['Platforms & APIs','Salesforce (Flows, Validation Rules), REST APIs, OpenAI API, Slack API, HERE API']
 ];
+function items(str){return str.split(/,\s*(?![^()]*\))/);}
 var LEAD=['Resident Assistant','Drexel Global Engagement Scholar','Peer Mentor - Women In Computing Society','Marketing Ambassador'];
 
 function repo(n){return REPOS[n]||'https://github.com/hitashikalra';}
@@ -367,7 +366,7 @@ var LEVELS={
   {sign:'Six Languages',say:'Quick fact: I speak six languages. Bet you can’t guess them all.',
    html:ch(3,'Six languages')+'<p>Six languages so far, and Finnish is working its way up to number seven.</p><p>Ask me which ones when we meet.</p>'},
   {sign:'The Spark',say:'Then one professor changed everything.',
-   html:ch(4,'How I fell in love with data')+'<p>I took a course by a CMU professor who loved data so much it was contagious. Watching him, I fell for it completely.</p><p>That’s the whole reason the second half of this story exists.</p>'},
+   html:ch(4,'How I fell in love with data')+'<p>I took a course by Professor Andy Malvo at CMU, and he loved data so much it was contagious. Watching him, I fell for it completely.</p><p>That’s the whole reason the second half of this story exists.</p>'},
   {sign:'Philadelphia',say:'So I packed my bags for Philadelphia.',
    html:ch(5,'A new home in Philly')+'<p>Drexel University, Computer Science, class of 2027. Far from the mountains, but I built a life here too:</p>'+ul(LEAD)},
   {sign:'The Pool',say:'When my head is full, I swim.',
@@ -384,16 +383,14 @@ var LEVELS={
    html:'<p class="tag">The top</p><h2>You made it</h2><p>That’s the kind of view I grew up with. One day I’ll show you the real one, from my window.</p><p>But the story doesn’t end on the mountain. The girl from the village went on to move millions of records in Philly.</p>'+LINKS}
  ]},
  city:{name:'Part 2: The City',sub:'What I’ve built',card:['Part 2','The City'],other:'mountain',otherName:'Part 1: The Climb ▸',score:true,stops:[
-  {sign:'Drexel',say:'Philadelphia. New city, new start.',
-   html:ch(1,'Drexel University')+'<p class="meta"><b>Bachelor of Science in Computer Science</b><br>Philadelphia, PA<br>Anticipated graduation - June 2027</p><p>Watch the counters at the top. Every stop from here adds to them.</p>'},
-  {sign:EXP[0].sign,say:'First summer. Still a freshman. 1,500 brain scans.',pop:'+1,500 brain scans',add:{scans:1500},html:ch(2,'The first big break')+expHTML(EXP[0]).replace('<p class="tag">Work experience</p>','')},
-  {sign:EXP[1].sign,say:'Back to India, teaching a computer to read 3,700 contracts.',pop:'+3,700 contracts',add:{contracts:3700},html:ch(3,'Mumbai')+expHTML(EXP[1]).replace('<p class="tag">Work experience</p>','')},
-  {sign:EXP[2].sign,say:'2 million records. 72% passed validation. I got it to 97%.',pop:'+2M records',add:{records:2000000},html:ch(4,'The big migration')+expHTML(EXP[2]).replace('<p class="tag">Work experience</p>','')},
-  {sign:EXP[3].sign,say:'4.5 million records, babysat 3 hours a day. I got it to 15 minutes.',pop:'+4.5M records',add:{records:4500000,contracts:3000},html:ch(5,'The boss level')+expHTML(EXP[3]).replace('<p class="tag">Work experience</p>','')},
-  {sign:'Projects',say:'After hours, I kept building.',pop:'+100,000 artworks',add:{art:100000},
-   html:ch(6,'Side quests')+PROJ.map(function(p){return '<h2>'+p.name+'</h2><p class="stack">'+p.stack+'</p>'+ul(p.bullets)+'<div class="links"><a class="pbtn" href="'+repo(p.name)+'" target="_blank" rel="noopener">View on GitHub ▸</a></div>';}).join('<hr>')+'<hr><h2>More on GitHub</h2><div class="links">'+MORE_REPOS.map(function(r){return '<a class="pbtn ghost" href="'+r[1]+'" target="_blank" rel="noopener">'+r[0]+' ▸</a>';}).join('')+'</div>'},
+  {sign:'Drexel',say:'Philadelphia, 2022. First stop: Drexel. One summer in, I was already doing research.',pop:'+1,500 brain scans',add:{scans:1500},
+   html:ch(1,'Drexel University')+'<p class="meta"><b>'+EDU.degree+'</b><br>'+EDU.where+'<br>'+EDU.when+'<br>Certifications: '+EDU.certs+'</p><p>Watch the counters at the top. Every stop from here adds to them.</p><hr>'+expHTML(EXP[0]).replace('<p class="tag">Work experience</p>','<p class="tag">My first research role</p>')},
+  {sign:EXP[1].sign,say:'2 million records. 72% passed validation. I got it to 97%.',pop:'+2M records',add:{records:2000000},html:ch(2,'The big migration')+expHTML(EXP[1]).replace('<p class="tag">Work experience</p>','')},
+  {sign:EXP[2].sign,say:'4.5 million records, babysat 3 hours a day. I got it to 15 minutes.',pop:'+4.5M records',add:{records:4500000,contracts:3000},html:ch(3,'The boss level')+expHTML(EXP[2]).replace('<p class="tag">Work experience</p>','')},
+  {sign:'Projects',say:'After hours, I kept building. Even my swim splits and Finnish flashcards got pipelines.',pop:'+4 side quests',add:{art:100000},
+   html:ch(4,'Side quests')+PROJ.map(function(p){return '<h2>'+p.name+'</h2><p class="stack">'+p.stack+'</p>'+ul(p.bullets)+'<div class="links"><a class="pbtn" href="'+repo(p.name)+'" target="_blank" rel="noopener">View on GitHub ▸</a></div>';}).join('<hr>')},
   {sign:'Skill Shop',say:'Here’s everything in my backpack.',
-   html:ch(7,'Inventory')+'<div class="inv">'+SKILLS.map(function(s){return '<div><h3>'+s[0]+'</h3><div class="slots">'+s[1].split(', ').map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>';}).join('')+'</div>'},
+   html:ch(5,'Inventory')+'<div class="inv"><div><h3>Certifications</h3><div class="slots">'+EDU.certs.split(' | ').map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>'+SKILLS.map(function(s){return '<div><h3>'+s[0]+'</h3><div class="slots">'+items(s[1]).map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>';}).join('')+'</div>'},
   {sign:'Say Hi',end:true,complete:true,say:'That’s the story so far. The next chapter could be with you.',
    html:'<p class="tag">Next chapter</p><h2>Let’s write it together</h2><p>I’m looking for data engineering roles starting June 2027. If you read this far, I’d love to hear from you.</p>'+LINKS}
  ]}
@@ -403,7 +400,7 @@ var LEVELS={
 document.getElementById('resumeInner').innerHTML=
  '<div class="rtop"><div><h1>Hitashi Kalra</h1><p class="contact"><a href="mailto:'+EMAIL+'">'+EMAIL+'</a> | <a href="https://linkedin.com/in/hitashikalra">linkedin.com/in/hitashikalra</a> | <a href="https://github.com/hitashikalra">github.com/hitashikalra</a></p></div>'+
  '<div class="btns" style="display:flex;gap:8px"><button class="pbtn" id="playBtn">Play the game</button><button class="pbtn ghost" onclick="window.print()">Print</button></div></div>'+
- '<h2>Education</h2><h3>Drexel University</h3><p class="rmeta">Bachelor of Science in Computer Science. Philadelphia, PA. Anticipated graduation - June 2027</p>'+
+ '<h2>Education</h2><h3>'+EDU.school+'</h3><p class="rmeta">'+EDU.degree+'. '+EDU.where+'. '+EDU.when+'</p><p class="rmeta">Certifications: '+EDU.certs+'</p>'+
  '<h2>Work Experience</h2>'+EXP.slice().reverse().map(function(e){return '<h3>'+e.co+'</h3><p class="rmeta">'+e.role+'. '+e.where+'. '+e.when+'</p>'+ul(e.bullets);}).join('')+
  '<h2>Technical Skills</h2><ul>'+SKILLS.map(function(s){return '<li><b>'+s[0]+':</b> '+s[1]+'</li>';}).join('')+'</ul>'+
  '<h2>Projects</h2>'+PROJ.map(function(p){return '<h3><a href="'+repo(p.name)+'">'+p.name+'</a></h3><p class="rmeta">'+p.stack+'</p>'+ul(p.bullets);}).join('')+
