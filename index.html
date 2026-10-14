@@ -159,6 +159,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .gallery .art:hover img{transform:scale(1.05)}
 .gallery figcaption{font-size:14px;color:var(--silver);margin-top:8px}
 .gallery figcaption a{color:var(--silver);font-size:12px}
+.polaroid{margin:4px 0 20px;background:#FFF1E8;padding:10px 10px 6px;box-shadow:6px 6px 0 rgba(0,0,0,.4);transform:rotate(-2deg);max-width:340px}
+.polaroid .art{display:block;width:100%;padding:0;border:0;background:none}
+.polaroid img{display:block;width:100%;height:auto}
+.polaroid figcaption{font-family:var(--pix);color:#1D2B53;text-align:center;font-size:15px;padding-top:8px}
 .lightbox{position:fixed;inset:0;z-index:60;background:rgba(10,14,30,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px}
 .lightbox img{max-width:min(92vw,900px);max-height:76vh;box-shadow:0 0 0 4px var(--cream);background:#fff}
 .lightbox p{color:var(--cream);font-family:var(--pix)}
@@ -359,7 +363,7 @@ var LEVELS={
   {sign:'The Village',say:'Every story starts somewhere. Mine starts in a tiny village in the Himalayas.',
    html:ch(1,'A small village in the Himalayas')+'<p>I grew up in Kangra, Himachal Pradesh, with mountains outside my window. I love home. When you meet me, I’ll show you the view from my room’s window. It’s very pretty.</p><p>Until then, here’s a peek at the range I grew up with:</p>'+HOME_GALLERY},
   {sign:'My Dad',say:'My first teacher? My dad. He’s still my best friend.',
-   html:ch(2,'My best friend is my dad')+'<p>He has mentored me my whole life. The things he taught me are the things I care about most: be kind, never hurt someone’s feelings, knowingly or unknowingly, and help everyone you can.</p><p>Everything else on this mountain sits on top of that.</p>'},
+   html:ch(2,'My best friend is my dad')+'<figure class="polaroid"><button class="art" data-art="dad" aria-label="Open photo of me with my dad"><img src="images/dad.jpg" alt="Me as a little girl in a striped sweater, next to my dad, smiling"></button><figcaption>Me and my dad, back home</figcaption></figure><p>He has mentored me my whole life. The things he taught me are the things I care about most: be kind, never hurt someone’s feelings, knowingly or unknowingly, and help everyone you can.</p><p>Everything else on this mountain sits on top of that.</p>'},
   {sign:'Six Languages',say:'Quick fact: I speak six languages. Bet you can’t guess them all.',
    html:ch(3,'Six languages')+'<p>Six languages so far, and Finnish is working its way up to number seven.</p><p>Ask me which ones when we meet.</p>'},
   {sign:'The Spark',say:'Then one professor changed everything.',
@@ -570,7 +574,7 @@ document.getElementById('toMenu').onclick=menu;
 document.getElementById('cClose').onclick=function(){completeEl.classList.add('hidden');};
 (function(){var h=document.getElementById('hook');var t=h.getAttribute('aria-label');if(reduce){h.textContent=t;return;}var i=0;var iv=setInterval(function(){i++;h.textContent=t.slice(0,i);if(i>=t.length)clearInterval(iv);},45);})();
 var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
-document.addEventListener('click',function(e){var a=e.target.closest('[data-art]');if(!a)return;var it=PICS[+a.dataset.art];lbImg.src=it.src;lbImg.alt=it.caption||'Artwork';lbCap.textContent=it.caption||'';lb.classList.remove('hidden');document.getElementById('lbClose').focus();});
+document.addEventListener('click',function(e){var a=e.target.closest('[data-art]');if(!a)return;var it=a.dataset.art==='dad'?{src:'images/dad.jpg',caption:'Me and my dad, back home'}:PICS[+a.dataset.art];lbImg.src=it.src;lbImg.alt=it.caption||'Artwork';lbCap.textContent=it.caption||'';lb.classList.remove('hidden');document.getElementById('lbClose').focus();});
 function closeLb(){lb.classList.add('hidden');}
 document.getElementById('lbClose').onclick=closeLb;lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
 document.getElementById('playBtn').onclick=menu;
